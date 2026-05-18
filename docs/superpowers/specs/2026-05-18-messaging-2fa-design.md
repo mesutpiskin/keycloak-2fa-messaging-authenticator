@@ -123,6 +123,7 @@ OtpMessage.builder()
 
 - Loads all `MessageSender` implementations via `ServiceLoader<MessageSender>`
 - Matches admin-configured `channel` + `providerId` to the correct sender
+- Provider config (API keys etc.) is read from `AuthenticatorConfigModel` and passed via `getSender(channel, providerId, Map<String, String> config)` — senders are instantiated on demand with injected config, not as singletons
 - Throws `IllegalStateException` with descriptive message if no matching sender found
 
 ### 4.4 Community Extension
@@ -143,9 +144,9 @@ Drop both JARs in `providers/` — Keycloak discovers them automatically.
 | `twilio` | SMS | `twilio.accountSid`, `twilio.authToken`, `twilio.fromNumber` |
 | `aws-sns` | SMS | `aws.region`, `aws.accessKeyId`, `aws.secretAccessKey` |
 | `vonage` | SMS | `vonage.apiKey`, `vonage.apiSecret`, `vonage.fromNumber` |
-| `telegram` | TELEGRAM | `telegram.botToken`, `telegram.contactAttribute` (default: `telegramChatId`) |
-| `whatsapp` | WHATSAPP | `whatsapp.apiUrl`, `whatsapp.apiToken`, `whatsapp.fromNumber`, `whatsapp.contactAttribute` (default: `phoneNumber`) |
-| `signal` | SIGNAL | `signal.cliRestUrl`, `signal.fromNumber`, `signal.contactAttribute` (default: `phoneNumber`) |
+| `telegram` | TELEGRAM | `telegram.bot.token`, `telegram.contact.attribute` (default: `telegramChatId`) |
+| `whatsapp` | WHATSAPP | `whatsapp.api.url`, `whatsapp.api.token`, `whatsapp.from.number`, `whatsapp.contact.attribute` (default: `phoneNumber`) |
+| `signal` | SIGNAL | `signal.cli.rest.url`, `signal.from.number`, `signal.contact.attribute` (default: `phoneNumber`) |
 
 All secret fields use `ProviderConfigProperty.SECRET_TYPE` — masked in admin UI, never logged.
 
