@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-05-18-messaging-2fa-design.md
+  s_43f9cd26ccf2d5::t_8eb1f1c3d01a34 1-362
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "93187059155f45dca3f5a4b843074c3edd8db9f6",
+  "prompts": {},
+  "sessions": {
+    "s_43f9cd26ccf2d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "530ecc6e-1a1f-40ba-ba99-a5475e81e42f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "MESUT PISKIN <mesut.piskin@turkcell.com.tr>"
+    }
+  }
+}
