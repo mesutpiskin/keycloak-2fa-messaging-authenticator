@@ -1,0 +1,21 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/service/MessageDeliveryException.java
+  s_b9266a2a638423::t_9a6115f29f16fd 1-6
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/service/MessageSender.java
+  s_b9266a2a638423::t_3bb3871acc9404 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "2a10bcae0414ae7476657ff3574af85913c1b1af",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
