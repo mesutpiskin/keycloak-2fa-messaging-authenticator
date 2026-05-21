@@ -1,0 +1,21 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/service/impl/AwsSnsMessageSender.java
+  s_b9266a2a638423::t_d9413db1e67206 1-77
+src/test/java/com/mesutpiskin/keycloak/auth/messaging/service/impl/AwsSnsMessageSenderTest.java
+  s_b9266a2a638423::t_d924324d1ebae7 1-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "39a173c565c9a768e15c1c72cc5d74927722b5ab",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
