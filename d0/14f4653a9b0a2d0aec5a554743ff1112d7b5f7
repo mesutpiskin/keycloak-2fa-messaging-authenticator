@@ -1,0 +1,21 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/E164Validator.java
+  s_b9266a2a638423::t_6a8962cc8deaa0 1-21
+src/test/java/com/mesutpiskin/keycloak/auth/messaging/E164ValidatorTest.java
+  s_b9266a2a638423::t_4b43df4b14f676 1-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "d014f4653a9b0a2d0aec5a554743ff1112d7b5f7",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
