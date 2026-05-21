@@ -1,0 +1,19 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/model/MessageChannel.java
+  s_b9266a2a638423::t_28bb58846c1f37 1-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "62c4408b94fa5e40c9bdaa472dc442c915f34a4c",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
