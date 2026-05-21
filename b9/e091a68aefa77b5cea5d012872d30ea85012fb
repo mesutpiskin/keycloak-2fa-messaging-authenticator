@@ -1,0 +1,21 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/OtpHashUtils.java
+  s_b9266a2a638423::t_8e9efec0140dc4 1-32
+src/test/java/com/mesutpiskin/keycloak/auth/messaging/OtpHashUtilsTest.java
+  s_b9266a2a638423::t_942aace5b0bf77 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "b9e091a68aefa77b5cea5d012872d30ea85012fb",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
