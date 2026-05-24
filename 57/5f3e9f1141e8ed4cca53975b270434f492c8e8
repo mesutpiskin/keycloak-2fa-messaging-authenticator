@@ -1,0 +1,29 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/MessagingAuthenticatorCredentialProvider.java
+  s_b9266a2a638423::t_194d21a15d81fa 1-97
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/ConditionalMessagingAuthenticatorFormFactory.java
+  s_b9266a2a638423::t_a6614891e00e77 1-2
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/MessagingAuthenticatorFormFactory.java
+  s_b9266a2a638423::t_54f7762a168e38 1-2
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/MessagingAuthenticatorRequiredAction.java
+  s_b9266a2a638423::t_f9de71ab23bd2f 1-2
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/MessagingAuthenticatorCredentialProviderFactory.java
+  s_b9266a2a638423::t_7c43288b08df3f 1-16
+src/test/java/com/mesutpiskin/keycloak/auth/messaging/MessagingAuthenticatorCredentialProviderTest.java
+  s_b9266a2a638423::t_b7267b4e668fc8 1-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "575f3e9f1141e8ed4cca53975b270434f492c8e8",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
