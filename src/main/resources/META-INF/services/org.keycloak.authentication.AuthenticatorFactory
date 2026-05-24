@@ -1,0 +1,2 @@
+com.mesutpiskin.keycloak.auth.messaging.MessagingAuthenticatorFormFactory
+com.mesutpiskin.keycloak.auth.messaging.ConditionalMessagingAuthenticatorFormFactory

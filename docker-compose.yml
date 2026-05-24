@@ -1,0 +1,10 @@
+services:
+  keycloak:
+    build: .
+    container_name: keycloak-messaging-test
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: start-dev
