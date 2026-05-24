@@ -1,0 +1,21 @@
+src/test/java/com/mesutpiskin/keycloak/auth/messaging/ConditionalMessagingAuthenticatorFormTest.java
+  s_b9266a2a638423::t_312cee8b22054f 1-61
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/ConditionalMessagingAuthenticatorForm.java
+  s_b9266a2a638423::t_b8a38a88f6b86c 1-110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "1c724fd8998cb93c1640d16fe554ea93c534c48c",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
