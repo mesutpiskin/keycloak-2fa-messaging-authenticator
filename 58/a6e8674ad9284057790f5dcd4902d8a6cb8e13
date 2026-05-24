@@ -1,0 +1,21 @@
+.github/workflows/maven.yml
+  s_b9266a2a638423::t_b4c84c9be4ffcc 1-26
+.github/workflows/maven-publish.yml
+  s_b9266a2a638423::t_f007dc83a238d7 1-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "58a6e8674ad9284057790f5dcd4902d8a6cb8e13",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
