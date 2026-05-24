@@ -1,0 +1,21 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/service/impl/WhatsAppMessageSender.java
+  s_b9266a2a638423::t_f0e9b8cee11ebd 1-84
+src/test/java/com/mesutpiskin/keycloak/auth/messaging/service/impl/WhatsAppMessageSenderTest.java
+  s_b9266a2a638423::t_f2e6f81930a5e8 1-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "d6c3adb924abb1db81c6ca8f293f9fed9aaca260",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
