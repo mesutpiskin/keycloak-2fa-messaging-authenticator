@@ -1,0 +1,25 @@
+src/main/resources/META-INF/services/org.keycloak.authentication.AuthenticatorFactory
+  s_b9266a2a638423::t_ff316f75ab2803 1-2
+src/main/resources/META-INF/services/org.keycloak.authentication.RequiredActionFactory
+  s_b9266a2a638423::t_ab22482d1fa8f4 1
+src/main/resources/META-INF/services/com.mesutpiskin.keycloak.auth.messaging.service.MessageSender
+  s_b9266a2a638423::t_3576ea61001a94 1-6
+src/main/resources/META-INF/services/org.keycloak.credential.CredentialProviderFactory
+  s_b9266a2a638423::t_b41139fc14f59a 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "61f8b148ce4a5ec7aa760d4b35e1e1c1ca432f3d",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
