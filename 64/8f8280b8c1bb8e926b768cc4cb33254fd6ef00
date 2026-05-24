@@ -1,0 +1,21 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/ContactResolver.java
+  s_b9266a2a638423::t_e43fded5b0bb0d 1-28
+src/test/java/com/mesutpiskin/keycloak/auth/messaging/ContactResolverTest.java
+  s_b9266a2a638423::t_793e758af5f122 1-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "648f8280b8c1bb8e926b768cc4cb33254fd6ef00",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
