@@ -1,0 +1,23 @@
+src/main/resources/theme-resources/templates/messaging-code-form.ftl
+  s_b9266a2a638423::t_dc5d877abcf63f 1-39
+src/main/resources/theme-resources/templates/messaging-authenticator-setup-verify-form.ftl
+  s_b9266a2a638423::t_7f6bb62542f3ec 1-36
+src/main/resources/theme-resources/templates/messaging-authenticator-setup-form.ftl
+  s_b9266a2a638423::t_b204a826990718 1-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "dde16178b203540d70575a248e0a62627f9bdc69",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
