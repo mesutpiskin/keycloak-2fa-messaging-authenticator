@@ -1,0 +1,6 @@
+com.mesutpiskin.keycloak.auth.messaging.service.impl.TwilioMessageSender
+com.mesutpiskin.keycloak.auth.messaging.service.impl.AwsSnsMessageSender
+com.mesutpiskin.keycloak.auth.messaging.service.impl.VonageMessageSender
+com.mesutpiskin.keycloak.auth.messaging.service.impl.TelegramMessageSender
+com.mesutpiskin.keycloak.auth.messaging.service.impl.WhatsAppMessageSender
+com.mesutpiskin.keycloak.auth.messaging.service.impl.SignalMessageSender
