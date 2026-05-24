@@ -1,0 +1,21 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/MessagingAuthenticatorCredentialModel.java
+  s_b9266a2a638423::t_857bb7e97f4aed 1-39
+src/test/java/com/mesutpiskin/keycloak/auth/messaging/MessagingAuthenticatorCredentialModelTest.java
+  s_b9266a2a638423::t_1efe23a9a743c0 1-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "29663426a353d5d3078395619290db712b1bfd00",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
