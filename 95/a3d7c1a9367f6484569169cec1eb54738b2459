@@ -1,0 +1,21 @@
+src/main/java/com/mesutpiskin/keycloak/auth/messaging/service/impl/TelegramMessageSender.java
+  s_b9266a2a638423::t_0000256f0ee2e5 1-84
+src/test/java/com/mesutpiskin/keycloak/auth/messaging/service/impl/TelegramMessageSenderTest.java
+  s_b9266a2a638423::t_9fa22ddcf6e78c 1-92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "95a3d7c1a9367f6484569169cec1eb54738b2459",
+  "prompts": {},
+  "sessions": {
+    "s_b9266a2a638423": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "943c0569-397a-4be6-884b-5feaedf3ad4d",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "MESUT PISKIN <mesutpiskin@outlook.com>"
+    }
+  }
+}
