@@ -1,0 +1,33 @@
+---
+sidebar_position: 1
+---
+
+# Authentication Flow Configuration
+
+## Available authenticators
+
+- `messaging-authenticator`
+- `conditional-messaging-authenticator`
+- `messaging-authenticator-enrollment` required action
+
+## Important config keys
+
+| Key | Description |
+|---|---|
+| `message.channel` | Channel to use: `SMS`, `TELEGRAM`, `WHATSAPP`, `SIGNAL` |
+| `sms.provider` | SMS backend: `twilio`, `aws-sns`, `vonage` |
+| `otp.length` | Number of digits in the OTP |
+| `otp.ttl` | OTP validity in seconds |
+| `otp.resend.cooldown` | Minimum wait time before resend |
+| `otp.max.attempts` | Maximum incorrect attempts |
+| `simulation.mode` | Log instead of sending in development |
+| `skip.setup` | Skip enrollment for already-configured users |
+
+## Contact attributes
+
+| Channel | Default attribute |
+|---|---|
+| SMS | `phoneNumber` |
+| Telegram | `telegramChatId` |
+| WhatsApp | `phoneNumber` |
+| Signal | `phoneNumber` |

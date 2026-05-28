@@ -1,0 +1,38 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: temurin
+          cache: maven
+
+      - name: Verify with Maven
+        run: mvn -B verify --file pom.xml
+
+      - name: Upload JAR artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: keycloak-2fa-messaging-authenticator-jar
+          path: target/keycloak-2fa-messaging-authenticator*.jar
+          if-no-files-found: error

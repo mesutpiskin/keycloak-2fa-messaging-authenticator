@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Keycloak 2FA Email Authenticator">
+  <!-- Shield outer -->
+  <path d="M32 3 L57 16 L57 37 C57 51 45 61 32 63 C19 61 7 51 7 37 L7 16 Z"
+        fill="#1565c0"/>
+  <!-- Shield inner highlight -->
+  <path d="M32 9 L52 20 L52 38 C52 49 43 57 32 59 C21 57 12 49 12 38 L12 20 Z"
+        fill="#1976d2"/>
+  <!-- Envelope body -->
+  <rect x="18" y="26" width="28" height="19" rx="2" fill="white"/>
+  <!-- Envelope fold -->
+  <path d="M18 28 L32 38 L46 28"
+        stroke="#1565c0" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

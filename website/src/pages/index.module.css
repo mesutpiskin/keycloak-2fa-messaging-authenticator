@@ -1,0 +1,57 @@
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    var(--ifm-color-primary-darkest) 0%,
+    var(--ifm-color-primary) 100%
+  );
+  color: white;
+}
+
+.heroTitle {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+  color: white;
+}
+
+.heroBadges {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.heroButtons a.button--secondary {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+}
+
+.heroButtons a.button--secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+}

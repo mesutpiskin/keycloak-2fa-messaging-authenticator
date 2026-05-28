@@ -1,0 +1,55 @@
+# Keycloak 2FA Email Authenticator
+
+> A Keycloak SPI plugin that adds email-based OTP two-factor authentication.
+> Supports Keycloak SMTP, SendGrid, AWS SES, and Mailgun.
+> Compatible with Keycloak 26.x. Requires Java 21+.
+
+## Installation
+
+- Download JAR from Maven Central
+  - groupId: io.github.mesutpiskin
+  - artifactId: keycloak-2fa-email-authenticator
+  - version format: <plugin-version>-KC<keycloak-version> (e.g. 26.4.0-KC26.6.1)
+- Copy JAR to <KEYCLOAK_HOME>/providers/
+- Run: <KEYCLOAK_HOME>/bin/kc.sh build
+- Restart Keycloak
+
+## Authentication Flow Configuration
+
+- Keycloak admin → Authentication → Flows → duplicate Browser flow
+- Add "Email OTP" execution inside the Forms sub-flow
+- Set requirement: REQUIRED (all users) or use "Conditional Email OTP" (role-based)
+- Bind the new flow as the Browser flow
+
+## Authenticator Settings (⚙️ on Email OTP row)
+
+- Email Provider: KEYCLOAK | SENDGRID | AWS_SES | MAILGUN
+- Code length: 6 digits (default)
+- Time-to-live: 300 seconds (default)
+- Simulation mode: false — when true, logs OTP to server output instead of sending email (dev only)
+- Resend cooldown: 30 seconds (default)
+- Max code attempts: 5 (default)
+- Enable Fallback to Keycloak SMTP: recommended true in production
+
+## Email Provider Credentials
+
+- KEYCLOAK: no credentials needed, uses realm SMTP settings
+- SENDGRID: API key (starts with SG.) + verified from-email + optional from-name
+- AWS_SES: Access Key ID + Secret Access Key + region (e.g. us-east-1) + verified from-email
+- MAILGUN: Private API key (starts with key-) + sending domain + from-email + region (US or EU)
+
+## Source Layout
+
+- src/main/java/                                        — authenticator SPI implementation
+- src/main/resources/theme-resources/templates/html/   — FreeMarker email template (variables: ${code}, ${ttl})
+- src/main/resources/theme-resources/messages/         — i18n properties (en, tr, fr, de, es, it, da, ru, az, ar, zh_TW)
+
+## Docs
+
+- Full documentation: https://mesutpiskin.github.io/keycloak-2fa-email-authenticator/
+- Get Started: https://mesutpiskin.github.io/keycloak-2fa-email-authenticator/get-started
+- Authentication flow: https://mesutpiskin.github.io/keycloak-2fa-email-authenticator/configuration/authentication-flow
+- Email providers: https://mesutpiskin.github.io/keycloak-2fa-email-authenticator/configuration/email-providers
+- Troubleshooting: https://mesutpiskin.github.io/keycloak-2fa-email-authenticator/troubleshooting
+- GitHub: https://github.com/mesutpiskin/keycloak-2fa-email-authenticator
+- Maven Central: https://central.sonatype.com/artifact/io.github.mesutpiskin/keycloak-2fa-email-authenticator

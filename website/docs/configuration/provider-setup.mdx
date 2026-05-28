@@ -1,0 +1,53 @@
+---
+sidebar_position: 2
+---
+
+# Provider Setup
+
+## Twilio
+
+| Key | Description |
+|---|---|
+| `twilio.accountSid` | Twilio account SID |
+| `twilio.authToken` | Twilio auth token |
+| `twilio.fromNumber` | Sender number in E.164 format |
+
+## AWS SNS
+
+| Key | Description |
+|---|---|
+| `aws.region` | AWS region, for example `us-east-1` |
+| `aws.accessKeyId` | IAM access key ID |
+| `aws.secretAccessKey` | IAM secret access key |
+
+## Vonage
+
+| Key | Description |
+|---|---|
+| `vonage.apiKey` | Vonage API key |
+| `vonage.apiSecret` | Vonage API secret |
+| `vonage.fromNumber` | Sender ID or number |
+
+## Telegram
+
+| Key | Description |
+|---|---|
+| `telegram.bot.token` | Telegram bot token |
+| `telegram.contact.attribute` | User attribute that stores the chat ID |
+
+## WhatsApp
+
+| Key | Description |
+|---|---|
+| `whatsapp.api.url` | API endpoint used to send messages |
+| `whatsapp.api.token` | API token |
+| `whatsapp.from.number` | Sender number |
+| `whatsapp.contact.attribute` | User attribute for the recipient number |
+
+## Signal
+
+| Key | Description |
+|---|---|
+| `signal.cli.rest.url` | Base URL of `signal-cli-rest-api` |
+| `signal.from.number` | Sender number |
+| `signal.contact.attribute` | User attribute for the recipient number |

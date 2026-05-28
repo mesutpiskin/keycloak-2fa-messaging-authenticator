@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0d47a1"/>
+      <stop offset="100%" stop-color="#1565c0"/>
+    </linearGradient>
+    <linearGradient id="shield-inner" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.03"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <g stroke="white" stroke-opacity="0.04" stroke-width="1">
+    <line x1="0" y1="90"  x2="1200" y2="90"/>
+    <line x1="0" y1="180" x2="1200" y2="180"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="360" x2="1200" y2="360"/>
+    <line x1="0" y1="450" x2="1200" y2="450"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="150" y1="0"  x2="150" y2="630"/>
+    <line x1="300" y1="0"  x2="300" y2="630"/>
+    <line x1="450" y1="0"  x2="450" y2="630"/>
+    <line x1="600" y1="0"  x2="600" y2="630"/>
+    <line x1="750" y1="0"  x2="750" y2="630"/>
+    <line x1="900" y1="0"  x2="900" y2="630"/>
+    <line x1="1050" y1="0" x2="1050" y2="630"/>
+  </g>
+
+  <!-- Logo — shield + envelope (left side) -->
+  <g transform="translate(100, 195) scale(3.5)">
+    <path d="M36 4 L62 18 L62 40 C62 55 50 64 36 66 C22 64 10 55 10 40 L10 18 Z"
+          fill="white" fill-opacity="0.15"/>
+    <path d="M36 10 L56 22 L56 41 C56 52 47 60 36 62 C25 60 16 52 16 41 L16 22 Z"
+          fill="white" fill-opacity="0.2"/>
+    <!-- Envelope body -->
+    <rect x="21" y="30" width="30" height="20" rx="2" fill="white"/>
+    <!-- Envelope fold -->
+    <path d="M21 32 L36 43 L51 32"
+          stroke="#1565c0" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+
+  <!-- Title -->
+  <text x="460" y="255"
+        font-family="'Segoe UI', Arial, sans-serif"
+        font-size="62" font-weight="700"
+        fill="white" letter-spacing="-1">
+    Keycloak 2FA Email
+  </text>
+  <text x="460" y="325"
+        font-family="'Segoe UI', Arial, sans-serif"
+        font-size="62" font-weight="700"
+        fill="white" letter-spacing="-1">
+    Authenticator
+  </text>
+
+  <!-- Divider -->
+  <rect x="460" y="355" width="680" height="3" rx="2" fill="white" fill-opacity="0.3"/>
+
+  <!-- Tagline -->
+  <text x="460" y="400"
+        font-family="'Segoe UI', Arial, sans-serif"
+        font-size="30" fill="white" fill-opacity="0.8">
+    Email OTP · Keycloak SMTP · SendGrid · AWS SES · Mailgun
+  </text>
+
+  <!-- Badges row -->
+  <g transform="translate(460, 445)">
+    <!-- Badge 1: Java 21 -->
+    <rect width="120" height="40" rx="20" fill="white" fill-opacity="0.12"/>
+    <text x="60" y="26" font-family="'Segoe UI', Arial, sans-serif"
+          font-size="18" fill="white" text-anchor="middle">Java 21</text>
+
+    <!-- Badge 2: Keycloak 26.x -->
+    <rect x="135" width="165" height="40" rx="20" fill="white" fill-opacity="0.12"/>
+    <text x="217" y="26" font-family="'Segoe UI', Arial, sans-serif"
+          font-size="18" fill="white" text-anchor="middle">Keycloak 26.x</text>
+
+    <!-- Badge 3: Apache 2.0 -->
+    <rect x="315" width="170" height="40" rx="20" fill="white" fill-opacity="0.12"/>
+    <text x="400" y="26" font-family="'Segoe UI', Arial, sans-serif"
+          font-size="18" fill="white" text-anchor="middle">Apache 2.0</text>
+  </g>
+
+  <!-- GitHub URL -->
+  <text x="460" y="560"
+        font-family="'Segoe UI', Arial, sans-serif"
+        font-size="22" fill="white" fill-opacity="0.5">
+    github.com/mesutpiskin/keycloak-2fa-email-authenticator
+  </text>
+</svg>

@@ -5,7 +5,7 @@
 
     <artifactId>keycloak-2fa-messaging-authenticator</artifactId>
     <groupId>io.github.mesutpiskin</groupId>
-    <version>26.0.0</version>
+    <version>26.0.0-KC26.6.1</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
 
@@ -46,6 +46,9 @@
         <mockito.version>5.23.0</mockito.version>
         <maven-surefire.plugin.version>3.5.5</maven-surefire.plugin.version>
         <maven-jar.plugin.version>3.5.0</maven-jar.plugin.version>
+        <maven-source.plugin.version>3.3.1</maven-source.plugin.version>
+        <maven-javadoc.plugin.version>3.8.0</maven-javadoc.plugin.version>
+        <maven-gpg.plugin.version>3.2.7</maven-gpg.plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -159,7 +162,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.3.0</version>
+                        <version>${maven-source.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -171,7 +174,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.6.3</version>
+                        <version>${maven-javadoc.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-javadoc</id>
@@ -186,7 +189,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>${maven-gpg.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

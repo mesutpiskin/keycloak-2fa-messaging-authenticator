@@ -1,0 +1,21 @@
+---
+sidebar_position: 1
+---
+
+# Local Installation
+
+## Build from source
+
+```bash
+mvn -B verify
+```
+
+The packaged artifact will be created under `target/`.
+
+## Deploy to Keycloak
+
+Copy the generated JAR into your Keycloak `providers/` directory and restart the server.
+
+```bash
+cp target/keycloak-2fa-messaging-authenticator-*.jar /path/to/keycloak/providers/
+```

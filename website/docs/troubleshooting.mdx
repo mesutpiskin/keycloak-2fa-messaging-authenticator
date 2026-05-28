@@ -1,0 +1,14 @@
+# Troubleshooting
+
+## Authenticator is not visible in Keycloak
+
+- verify the JAR is present in `providers/`
+- rebuild/restart Keycloak after copying the provider
+- check server startup logs for SPI loading errors
+
+## No OTP is delivered
+
+- verify `message.channel` and `sms.provider` values
+- verify the provider-specific secret values
+- confirm the user attribute exists and matches the required format
+- try `simulation.mode=true` first

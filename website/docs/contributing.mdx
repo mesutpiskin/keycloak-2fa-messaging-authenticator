@@ -1,0 +1,17 @@
+# Contributing
+
+Contributions are welcome.
+
+## Before opening a PR
+
+- run `mvn -B verify`
+- keep changes focused
+- update docs when configuration or behavior changes
+
+## Extending with custom senders
+
+Implement `com.mesutpiskin.keycloak.auth.messaging.service.MessageSender` in a separate JAR and register it under:
+
+```
+META-INF/services/com.mesutpiskin.keycloak.auth.messaging.service.MessageSender
+```

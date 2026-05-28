@@ -1,0 +1,40 @@
+---
+sidebar_position: 2
+---
+
+# Get Started
+
+## 1. Get the artifact
+
+Use Maven Central or GitHub Releases.
+
+### Maven
+
+```xml
+<dependency>
+  <groupId>io.github.mesutpiskin</groupId>
+  <artifactId>keycloak-2fa-messaging-authenticator</artifactId>
+  <version>26.0.0-KC26.6.1</version>
+</dependency>
+```
+
+### Gradle
+
+```groovy
+implementation "io.github.mesutpiskin:keycloak-2fa-messaging-authenticator:26.0.0-KC26.6.1"
+```
+
+## 2. Install into Keycloak
+
+Copy the JAR into the `providers/` directory of your Keycloak distribution and restart Keycloak.
+
+## 3. Add the authenticator to a flow
+
+In the admin console, open **Authentication → Flows** and add:
+
+- **Messaging OTP** for always-on verification
+- **Conditional Messaging OTP** for conditional verification
+
+## 4. Configure the channel
+
+Set `message.channel` and the corresponding provider settings for your selected delivery backend.
