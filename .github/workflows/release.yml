@@ -11,9 +11,27 @@ permissions:
   packages: write
 
 jobs:
-  publish:
-    name: Publish Maven artifacts
+  kc-version-matrix:
+    name: Get last 10 Keycloak versions
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Resolve Keycloak release matrix
+        id: set-matrix
+        shell: bash
+        run: |
+          VERSIONS=$(curl -L -s https://api.github.com/repos/keycloak/keycloak/releases \
+            | jq -c '[.[] | select(.prerelease == false and .draft == false)] | sort_by(.name)[-10:] | [ .[] | .version=.name | {version}]')
+          echo "matrix={\"include\":$VERSIONS}" >> "$GITHUB_OUTPUT"
+
+  publish:
+    name: Publish for Keycloak ${{ matrix.version }}
+    needs: kc-version-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.kc-version-matrix.outputs.matrix) }}
 
     steps:
       - name: Checkout
@@ -25,9 +43,7 @@ jobs:
         id: meta
         shell: bash
         run: |
-          if [ "${GITHUB_EVENT_NAME}" = "release" ]; then
-            TAG="${{ github.event.release.tag_name }}"
-          elif [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
             TAG="${GITHUB_REF_NAME}"
           else
             TAG=""
@@ -38,9 +54,11 @@ jobs:
             exit 1
           fi
 
-          VERSION="${TAG#v}"
+          BASE_VERSION="${TAG#v}"
+          PUBLISH_VERSION="${BASE_VERSION%%-KC*}-KC${{ matrix.version }}"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "base_version=$BASE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "publish_version=$PUBLISH_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Set up Java and Maven Central credentials
         uses: actions/setup-java@v4
@@ -59,14 +77,14 @@ jobs:
         run: |
           sed -i 's|</servers>|<server><id>github</id><username>${env.GITHUB_ACTOR}</username><password>${env.GITHUB_TOKEN}</password></server></servers>|' ~/.m2/settings.xml
 
-      - name: Set project version from tag
-        run: mvn -B versions:set -DnewVersion=${{ steps.meta.outputs.version }}
+      - name: Set project version from matrix target
+        run: mvn -B versions:set -DnewVersion=${{ steps.meta.outputs.publish_version }}
 
       - name: Publish to Maven Central
         shell: bash
         run: |
           set +e
-          output=$(mvn -B -P release deploy --file pom.xml 2>&1)
+          output=$(mvn -B -Dkeycloak.version=${{ matrix.version }} -P release deploy --file pom.xml 2>&1)
           mvn_exit=$?
           set -e
           echo "$output"
@@ -83,13 +101,16 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_SIGNING_KEY_PASSWORD }}
 
       - name: Publish to GitHub Packages
-        run: mvn -B -P github deploy -DskipTests -Dgpg.skip=true --file pom.xml
+        run: mvn -B -Dkeycloak.version=${{ matrix.version }} -P github deploy -DskipTests -Dgpg.skip=true --file pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Attach release artifacts
         shell: bash
         run: |
-          gh release upload "${{ steps.meta.outputs.tag }}"             target/keycloak-2fa-messaging-authenticator*.jar             pom.xml             --repo "${{ github.repository }}"             --clobber
+          gh release upload "${{ steps.meta.outputs.tag }}" \
+            target/keycloak-2fa-messaging-authenticator*.jar \
+            --repo "${{ github.repository }}" \
+            --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
