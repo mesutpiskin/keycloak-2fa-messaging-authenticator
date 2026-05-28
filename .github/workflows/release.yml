@@ -88,11 +88,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Attach release artifacts
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.meta.outputs.tag }}
-          files: |
-            target/keycloak-2fa-messaging-authenticator*.jar
-            target/*.pom
+        shell: bash
+        run: |
+          gh release upload "${{ steps.meta.outputs.tag }}"             target/keycloak-2fa-messaging-authenticator*.jar             pom.xml             --repo "${{ github.repository }}"             --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
