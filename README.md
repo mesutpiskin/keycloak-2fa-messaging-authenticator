@@ -21,6 +21,10 @@ Full documentation — installation, configuration, local testing, provider setu
 - Custom sender extension support through Java `ServiceLoader` SPI
 - Java 21 / Keycloak 26.x friendly build and release pipeline
 
+## Related projects
+
+Need OTP via email (Keycloak SMTP, SendGrid, AWS SES, or Mailgun)? See the sibling project: **[keycloak-2fa-email-authenticator](https://github.com/mesutpiskin/keycloak-2fa-email-authenticator)** — same approach, different channel.
+
 ## Supported Channels
 
 | Channel | Provider ID | Default user attribute |
