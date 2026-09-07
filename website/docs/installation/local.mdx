@@ -12,10 +12,19 @@ mvn -B verify
 
 The packaged artifact will be created under `target/`.
 
+The build produces a single self-contained JAR. Provider dependencies, including the AWS SDK
+used by the `aws-sns` backend, are packaged inside it, so nothing else needs to be copied into
+`providers/`.
+
 ## Deploy to Keycloak
 
-Copy the generated JAR into your Keycloak `providers/` directory and restart the server.
+Copy the generated JAR into your Keycloak `providers/` directory, then rebuild the server so it
+picks up the new provider.
 
 ```bash
 cp target/keycloak-2fa-messaging-authenticator-*.jar /path/to/keycloak/providers/
+/path/to/keycloak/bin/kc.sh build
 ```
+
+Restart Keycloak afterwards. `kc.sh build` is required on the Quarkus distribution: without it
+the provider is not registered, and the authenticator will not appear in the admin console.

@@ -6,6 +6,27 @@
 - rebuild/restart Keycloak after copying the provider
 - check server startup logs for SPI loading errors
 
+## `ServiceConfigurationError` for a message sender at startup or on send
+
+A log line such as:
+
+```text
+java.util.ServiceConfigurationError:
+  com.mesutpiskin.keycloak.auth.messaging.service.MessageSender:
+  com.mesutpiskin.keycloak.auth.messaging.service.impl.AwsSnsMessageSender
+  Unable to get public no-arg constructor
+```
+
+means the sender's dependencies are not on the classpath, despite the message pointing at the
+constructor. It affected `aws-sns` on releases whose JAR did not package the AWS SDK.
+
+- upgrade to a release that ships the self-contained JAR
+- install only that JAR in `providers/`, with no separately copied AWS SDK JARs
+- run `bin/kc.sh build` after copying, then restart
+
+Since the JAR became self-contained, one sender that fails to load no longer prevents the
+others from registering: it is skipped with a warning and the remaining channels keep working.
+
 ## No OTP is delivered
 
 - verify `message.channel` and `sms.provider` values
