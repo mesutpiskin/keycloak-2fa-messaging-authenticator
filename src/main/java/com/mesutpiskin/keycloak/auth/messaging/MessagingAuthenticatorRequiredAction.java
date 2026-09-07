@@ -142,7 +142,7 @@ public class MessagingAuthenticatorRequiredAction implements RequiredActionProvi
                 String providerId = resolveProviderId(channel, cfg);
                 MessageSender sender = MessageSenderRegistry.loadFromServiceLoader().getSender(channel, providerId, cfg);
                 sender.send(OtpMessage.builder().to(contact).code(code).ttlSeconds(ttl).build());
-            } catch (MessageDeliveryException | IllegalStateException e) {
+            } catch (MessageDeliveryException | RuntimeException | LinkageError e) {
                 logger.errorf(e, "Setup OTP delivery failed for channel=%s", channel);
                 context.challenge(context.form().setError("messaging-authenticator-setup-send-error").createForm(SETUP_TEMPLATE));
                 return;

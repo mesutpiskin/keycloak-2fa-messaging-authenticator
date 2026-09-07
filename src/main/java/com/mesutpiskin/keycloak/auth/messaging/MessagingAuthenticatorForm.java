@@ -80,7 +80,9 @@ public class MessagingAuthenticatorForm extends AbstractUsernameFormAuthenticato
                 MessageSender sender = MessageSenderRegistry.loadFromServiceLoader()
                         .getSender(channel, providerId, config);
                 sender.send(OtpMessage.builder().to(contact).code(code).ttlSeconds(ttl).build());
-            } catch (MessageDeliveryException e) {
+            } catch (MessageDeliveryException | RuntimeException | LinkageError e) {
+                // A misconfigured or unloadable provider must not surface as an uncaught
+                // server error; the user still gets the code form and can retry or resend.
                 logger.errorf(e, "Failed to deliver OTP via channel=%s provider=%s", channel, providerId);
             }
         }

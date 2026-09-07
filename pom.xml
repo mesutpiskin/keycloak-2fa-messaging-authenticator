@@ -46,6 +46,8 @@
         <mockito.version>5.23.0</mockito.version>
         <maven-surefire.plugin.version>3.5.5</maven-surefire.plugin.version>
         <maven-jar.plugin.version>3.5.0</maven-jar.plugin.version>
+        <maven-shade.plugin.version>3.6.0</maven-shade.plugin.version>
+        <maven-failsafe.plugin.version>3.5.5</maven-failsafe.plugin.version>
         <maven-source.plugin.version>3.3.1</maven-source.plugin.version>
         <maven-javadoc.plugin.version>3.8.0</maven-javadoc.plugin.version>
         <maven-gpg.plugin.version>3.2.7</maven-gpg.plugin.version>
@@ -129,6 +131,78 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+            <!-- Package the AWS SDK into the provider jar. Without it the released artifact
+                 is a thin jar and AwsSnsMessageSender cannot be instantiated by ServiceLoader
+                 at runtime. Keycloak stays 'provided' and is not bundled. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven-shade.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!-- The artifact is published to Maven Central; keep the deployed
+                                 POM's dependency metadata exactly as declared here. -->
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <artifactSet>
+                                <excludes>
+                                    <!-- Supplied by Keycloak, not owned by this extension: they
+                                         resolve as compile/runtime only because they sit in
+                                         Keycloak's own dependency tree. Bundling them would pin
+                                         copies that no longer move when Keycloak is upgraded.
+                                         ServiceLoaderIT proves the AWS SDK still resolves them
+                                         from the server's classpath at runtime. -->
+                                    <exclude>org.apache.httpcomponents:httpclient</exclude>
+                                    <exclude>org.apache.httpcomponents:httpcore</exclude>
+                                    <exclude>commons-codec:commons-codec</exclude>
+                                    <exclude>org.slf4j:slf4j-api</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <!-- Signatures of the original jars do not survive shading -->
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <!-- Merge META-INF/services rather than letting one jar's
+                                     descriptors overwrite another's: this project's
+                                     MessageSender registrations and the AWS SDK's own
+                                     SdkHttpService lookup both depend on them. -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Verifies the packaged artifact itself; see PackagingIT and ServiceLoaderIT. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe.plugin.version}</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <shaded.artifact>${project.build.directory}/${project.build.finalName}.jar</shaded.artifact>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <finalName>${project.artifactId}-v${project.version}</finalName>
