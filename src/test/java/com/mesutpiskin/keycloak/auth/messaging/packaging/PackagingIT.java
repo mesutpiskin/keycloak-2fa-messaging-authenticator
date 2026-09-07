@@ -106,6 +106,27 @@ class PackagingIT {
     }
 
     @Test
+    @DisplayName("does not bundle libraries the server already ships")
+    void excludesServerSuppliedLibraries() throws IOException {
+        // Duplicating these would pin copies that stop moving when Keycloak is upgraded, and
+        // Keycloak's Netty is a different version from the AWS SDK's. ServiceLoaderIT proves
+        // the SDK still resolves what it needs from the server's classpath.
+        try (JarFile jar = new JarFile(artifact.toFile())) {
+            var prefixes = java.util.List.of(
+                    "io/netty/",        // async client only; SnsClient is synchronous
+                    "org/apache/http/", // supplied by Keycloak
+                    "org/slf4j/",       // supplied by Keycloak
+                    "org/apache/commons/logging/");
+            var bundled = jar.stream()
+                    .map(JarEntry::getName)
+                    .filter(n -> prefixes.stream().anyMatch(n::startsWith))
+                    .limit(5)
+                    .toList();
+            assertTrue(bundled.isEmpty(), "server-supplied libraries were bundled: " + bundled);
+        }
+    }
+
+    @Test
     @DisplayName("drops signature files that shading invalidates")
     void excludesStaleSignatures() throws IOException {
         try (JarFile jar = new JarFile(artifact.toFile())) {

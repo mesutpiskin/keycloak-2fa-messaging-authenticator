@@ -104,10 +104,18 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- AWS SNS for SMS -->
+        <!-- AWS SNS for SMS. The async client is excluded: SnsClient is synchronous and uses
+             the Apache HTTP client, so netty-nio-client and its Netty tree are dead weight, and
+             Keycloak already ships its own Netty that a bundled copy could collide with. -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>sns</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>software.amazon.awssdk</groupId>
+                    <artifactId>netty-nio-client</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
