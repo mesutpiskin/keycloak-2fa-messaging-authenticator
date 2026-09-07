@@ -20,6 +20,27 @@ sidebar_position: 2
 | `aws.accessKeyId` | IAM access key ID |
 | `aws.secretAccessKey` | IAM secret access key |
 
+The IAM principal needs only `sns:Publish`. Publishing to a phone number is not scoped to a
+topic ARN, so the resource is `*`:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    { "Effect": "Allow", "Action": "sns:Publish", "Resource": "*" }
+  ]
+}
+```
+
+Credentials come from these three settings only; instance profiles, IRSA and the other AWS
+credential providers are not used.
+
+Two AWS-side settings commonly look like plugin failures:
+
+- new accounts sit in the **SMS sandbox**, where messages only reach phone numbers you have
+  verified — request production access before rolling out
+- SNS enforces a **monthly SMS spending limit**, USD 1.00 by default, after which publishes fail
+
 ## Vonage
 
 | Key | Description |

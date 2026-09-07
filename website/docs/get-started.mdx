@@ -26,7 +26,11 @@ implementation "io.github.mesutpiskin:keycloak-2fa-messaging-authenticator:26.0.
 
 ## 2. Install into Keycloak
 
-Copy the JAR into the `providers/` directory of your Keycloak distribution and restart Keycloak.
+Copy the JAR into the `providers/` directory of your Keycloak distribution, run
+`bin/kc.sh build`, then restart Keycloak.
+
+The JAR is self-contained, so this is the only file you need to install — the AWS SDK used by
+the `aws-sns` backend is packaged inside it.
 
 ## 3. Add the authenticator to a flow
 
