@@ -4,11 +4,12 @@ This repository publishes release artifacts through GitHub Actions.
 
 ## Triggers
 
-The release workflow supports:
+The release workflow is a two-step, PR-reviewed flow:
 
-- publishing a GitHub Release
-- pushing a Git tag that matches `v*`
-- manual workflow dispatch for maintenance
+1. **`workflow_dispatch`** with a `version` input (e.g. `26.0.2`) — bumps `pom.xml` on a
+   `release/v<version>` branch and opens a PR to `main`. Nothing is tagged or published yet.
+2. **Merging that PR** — tags `v<version>`, creates a GitHub Release with auto-generated notes,
+   then builds and publishes the jars for the last 10 Keycloak releases.
 
 ## Required GitHub Secrets
 
@@ -19,17 +20,27 @@ Configure these repository secrets before publishing:
 - `GPG_SIGNING_KEY`
 - `GPG_SIGNING_KEY_PASSWORD`
 
+Optional:
+
+- `RELEASE_TOKEN` — a PAT with `contents` and `pull-requests` write, used instead of the default
+  `GITHUB_TOKEN`. Without it, the release PR is opened by `GITHUB_TOKEN`, which cannot trigger the
+  `ci.yml` checks on that PR (a GitHub Actions limitation). Only matters if `main` requires status
+  checks to merge.
+
 ## Recommended Release Flow
 
-1. Update the changelog or release notes.
-2. Create and push a version tag such as `v26.0.1-KC26.6.1`.
-3. Optionally publish a GitHub Release using the same tag.
+1. Run the `Publish packages` workflow via `workflow_dispatch`, entering the version to release
+   (e.g. `26.0.2`, no leading `v`, no `-KC` suffix).
+2. Review the opened `Release <version>` PR — it bumps `pom.xml` on `main`.
+3. Merge the PR. This tags `v<version>`, publishes the GitHub Release, and kicks off the matrix
+   publish job.
 4. Wait for the `Publish packages` workflow to complete.
 5. Verify publication on Maven Central, GitHub Packages, and the GitHub Release assets page.
 
 ## Versioning
 
-This project uses a version pattern similar to:
+`main`'s `pom.xml` carries the base plugin version only (e.g. `26.0.2`), with no `-KC` suffix.
+Each matrix publish job sets its own version at deploy time, following the pattern:
 
 ```
 <plugin-version>-KC<keycloak-version>
@@ -38,7 +49,7 @@ This project uses a version pattern similar to:
 Example:
 
 ```
-26.0.0-KC26.6.1
+26.0.2-KC26.6.2
 ```
 
 ## Notes
