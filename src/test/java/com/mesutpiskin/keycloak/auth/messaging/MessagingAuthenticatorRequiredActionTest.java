@@ -1,10 +1,10 @@
 package com.mesutpiskin.keycloak.auth.messaging;
 
-import com.mesutpiskin.keycloak.auth.messaging.model.MessageChannel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.keycloak.authentication.RequiredActionContext;
+import org.keycloak.credential.CredentialModel;
 import org.keycloak.forms.login.LoginFormsProvider;
 import org.keycloak.http.HttpRequest;
 import org.keycloak.models.*;
@@ -13,11 +13,8 @@ import org.keycloak.sessions.AuthenticationSessionModel;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.Response;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -31,6 +28,7 @@ class MessagingAuthenticatorRequiredActionTest {
     private KeycloakSession keycloak;
     private LoginFormsProvider form;
     private HttpRequest httpRequest;
+    private SubjectCredentialManager cm;
 
     @BeforeEach
     void setUp() {
@@ -41,7 +39,7 @@ class MessagingAuthenticatorRequiredActionTest {
         keycloak = mock(KeycloakSession.class);
         form = mock(LoginFormsProvider.class);
         httpRequest = mock(HttpRequest.class);
-        SubjectCredentialManager cm = mock(SubjectCredentialManager.class);
+        cm = mock(SubjectCredentialManager.class);
         when(user.credentialManager()).thenReturn(cm);
         when(ctx.getUser()).thenReturn(user);
         when(ctx.getRealm()).thenReturn(realm);
@@ -53,7 +51,7 @@ class MessagingAuthenticatorRequiredActionTest {
         when(form.setError(anyString())).thenReturn(form);
         when(form.setError(anyString(), any())).thenReturn(form);
         when(form.createForm(anyString())).thenReturn(mock(Response.class));
-        when(realm.getAuthenticationFlowsStream()).thenReturn(Stream.empty());
+        when(realm.getAuthenticationFlowsStream()).thenAnswer(i -> Stream.empty());
     }
 
     @Test @DisplayName("requiredActionChallenge renders setup form")
@@ -80,9 +78,92 @@ class MessagingAuthenticatorRequiredActionTest {
         data.putSingle("contactAddress", "not-a-phone");
         when(httpRequest.getDecodedFormParameters()).thenReturn(data);
         when(session.getAuthNote(MessagingConstants.CODE)).thenReturn(null);
-        when(realm.getAuthenticationFlowsStream()).thenReturn(Stream.empty());
+        when(realm.getAuthenticationFlowsStream()).thenAnswer(i -> Stream.empty());
 
         new MessagingAuthenticatorRequiredAction().processAction(ctx);
         verify(form, atLeastOnce()).setError(anyString());
+    }
+
+    private static final String CONTACT = "+48500100200";
+    private static final String LABEL = "SMS: " + CONTACT;
+
+    private void submitValidCode() {
+        MultivaluedHashMap<String, String> data = new MultivaluedHashMap<>();
+        data.putSingle(MessagingConstants.CODE, "123456");
+        when(httpRequest.getDecodedFormParameters()).thenReturn(data);
+        when(session.getAuthNote(MessagingConstants.CODE)).thenReturn("123456");
+        when(session.getAuthNote(MessagingConstants.CODE_TTL))
+                .thenReturn(Long.toString(System.currentTimeMillis() + 60_000));
+        when(session.getAuthNote(MessagingConstants.SETUP_CONTACT_ADDRESS)).thenReturn(CONTACT);
+    }
+
+    private static CredentialModel existingCredential(String id, String label) {
+        CredentialModel c = MessagingAuthenticatorCredentialModel.create();
+        c.setId(id);
+        c.setUserLabel(label);
+        return c;
+    }
+
+    @Test @DisplayName("Valid code with no existing credential creates one")
+    void validCodeCreatesCredential() {
+        submitValidCode();
+        when(cm.getStoredCredentialsByTypeStream(MessagingAuthenticatorCredentialModel.TYPE_ID))
+                .thenReturn(Stream.empty());
+
+        new MessagingAuthenticatorRequiredAction().processAction(ctx);
+
+        verify(cm).createStoredCredential(argThat(c -> LABEL.equals(c.getUserLabel())));
+        verify(cm, never()).updateStoredCredential(any());
+        verify(user).setSingleAttribute(anyString(), eq(CONTACT));
+        verify(ctx).success();
+    }
+
+    @Test @DisplayName("Valid code with existing credential updates it instead of creating a duplicate")
+    void validCodeUpdatesExistingCredential() {
+        submitValidCode();
+        CredentialModel existing = existingCredential("c1", "SMS: +48999999999");
+        when(cm.getStoredCredentialsByTypeStream(MessagingAuthenticatorCredentialModel.TYPE_ID))
+                .thenReturn(Stream.of(existing));
+
+        new MessagingAuthenticatorRequiredAction().processAction(ctx);
+
+        verify(cm, never()).createStoredCredential(any());
+        verify(cm).updateStoredCredential(argThat(c -> "c1".equals(c.getId()) && LABEL.equals(c.getUserLabel())));
+        verify(user).setSingleAttribute(anyString(), eq(CONTACT));
+        verify(ctx).success();
+    }
+
+    @Test @DisplayName("Valid code removes extra messaging credentials before updating the first")
+    void validCodeRemovesExtraCredentials() {
+        submitValidCode();
+        CredentialModel first = existingCredential("c1", "SMS: +48111111111");
+        CredentialModel second = existingCredential("c2", LABEL);
+        when(cm.getStoredCredentialsByTypeStream(MessagingAuthenticatorCredentialModel.TYPE_ID))
+                .thenReturn(Stream.of(first, second));
+
+        new MessagingAuthenticatorRequiredAction().processAction(ctx);
+
+        var order = inOrder(cm);
+        order.verify(cm).removeStoredCredentialById("c2");
+        order.verify(cm).updateStoredCredential(argThat(c -> "c1".equals(c.getId()) && LABEL.equals(c.getUserLabel())));
+        verify(cm, never()).removeStoredCredentialById("c1");
+        verify(cm, never()).createStoredCredential(any());
+        verify(ctx).success();
+    }
+
+    @Test @DisplayName("Duplicate credential error shows a form error instead of failing")
+    void duplicateCredentialShowsFormError() {
+        submitValidCode();
+        when(cm.getStoredCredentialsByTypeStream(MessagingAuthenticatorCredentialModel.TYPE_ID))
+                .thenReturn(Stream.empty());
+        when(cm.createStoredCredential(any())).thenThrow(new ModelDuplicateException("Device already exists with the same name"));
+
+        new MessagingAuthenticatorRequiredAction().processAction(ctx);
+
+        verify(form).setError("messaging-authenticator-setup-already-configured");
+        verify(form).createForm("messaging-authenticator-setup-form.ftl");
+        verify(user, never()).setSingleAttribute(anyString(), anyString());
+        verify(ctx, never()).success();
+        verify(session).removeAuthNote(MessagingConstants.CODE);
     }
 }
