@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://mesutpiskin.github.io/keycloak-2fa-messaging-authenticator/
+    about: Installation, configuration, provider setup, and troubleshooting guides.
+  - name: Report a security vulnerability
+    url: https://github.com/mesutpiskin/keycloak-2fa-messaging-authenticator/security/advisories/new
+    about: Please report security issues privately, not as a public issue.
