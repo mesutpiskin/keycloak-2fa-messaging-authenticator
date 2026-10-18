@@ -119,6 +119,14 @@ The produced JAR is written under `target/`.
 
 Contributions are welcome — bug reports, feature requests, translations, provider improvements, and pull requests. Please open an issue first for significant changes.
 
+- How to set up, build, and submit changes: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Community guidelines: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- Accessibility goals and how to report a barrier: [ACCESSIBILITY.md](ACCESSIBILITY.md)
+
+## Security
+
+Please do not report security vulnerabilities through public GitHub issues. See [SECURITY.md](SECURITY.md) for how to report them privately.
+
 ## Sponsor
 
 This project is developed and maintained voluntarily.

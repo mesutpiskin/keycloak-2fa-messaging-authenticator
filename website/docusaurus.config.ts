@@ -48,6 +48,10 @@ const config: Config = {
         { title: "Community", items: [
           { label: "GitHub Issues", href: "https://github.com/mesutpiskin/keycloak-2fa-messaging-authenticator/issues" },
           { label: "Pull Requests", href: "https://github.com/mesutpiskin/keycloak-2fa-messaging-authenticator/pulls" },
+          { label: "Contributing", to: "/contributing" },
+          { label: "Code of Conduct", href: "https://github.com/mesutpiskin/keycloak-2fa-messaging-authenticator/blob/main/CODE_OF_CONDUCT.md" },
+          { label: "Security Policy", href: "https://github.com/mesutpiskin/keycloak-2fa-messaging-authenticator/blob/main/SECURITY.md" },
+          { label: "Accessibility", href: "https://github.com/mesutpiskin/keycloak-2fa-messaging-authenticator/blob/main/ACCESSIBILITY.md" },
         ]},
         { title: "More", items: [
           { label: "GitHub", href: "https://github.com/mesutpiskin/keycloak-2fa-messaging-authenticator" },
