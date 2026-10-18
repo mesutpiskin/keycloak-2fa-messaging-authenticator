@@ -13,6 +13,7 @@ import org.keycloak.sessions.AuthenticationSessionModel;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.Response;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -59,6 +60,49 @@ class MessagingAuthenticatorRequiredActionTest {
         new MessagingAuthenticatorRequiredAction().requiredActionChallenge(ctx);
         verify(form).createForm("messaging-authenticator-setup-form.ftl");
         verify(ctx).challenge(any(Response.class));
+    }
+
+    private void useChannel(String channel) {
+        AuthenticationFlowModel flow = new AuthenticationFlowModel();
+        flow.setId("flow");
+        AuthenticationExecutionModel exec = new AuthenticationExecutionModel();
+        exec.setAuthenticator(MessagingAuthenticatorFormFactory.PROVIDER_ID);
+        exec.setAuthenticatorConfig("cfg");
+        AuthenticatorConfigModel cfg = new AuthenticatorConfigModel();
+        cfg.setConfig(Map.of(MessagingConstants.MESSAGE_CHANNEL, channel));
+        when(realm.getAuthenticationFlowsStream()).thenAnswer(i -> Stream.of(flow));
+        when(realm.getAuthenticationExecutionsStream("flow")).thenAnswer(i -> Stream.of(exec));
+        when(realm.getAuthenticatorConfigById("cfg")).thenReturn(cfg);
+    }
+
+    @Test @DisplayName("Setup form marks Telegram so the template shows the chat ID label")
+    void challengeTelegramSetsIsTelegramTrue() {
+        useChannel("TELEGRAM");
+        new MessagingAuthenticatorRequiredAction().requiredActionChallenge(ctx);
+        verify(form).setAttribute("isTelegram", true);
+        verify(form).setAttribute("channelDisplayName", "Telegram");
+    }
+
+    @Test @DisplayName("Setup form for SMS sets isTelegram=false so the template shows the phone label")
+    void challengeSmsSetsIsTelegramFalse() {
+        useChannel("SMS");
+        new MessagingAuthenticatorRequiredAction().requiredActionChallenge(ctx);
+        verify(form).setAttribute("isTelegram", false);
+    }
+
+    @Test @DisplayName("Setup form re-rendered with an error keeps the channel attributes")
+    void errorRerenderKeepsChannelAttributes() {
+        useChannel("TELEGRAM");
+        MultivaluedHashMap<String, String> data = new MultivaluedHashMap<>();
+        data.putSingle("contactAddress", "not-a-chat-id");
+        when(httpRequest.getDecodedFormParameters()).thenReturn(data);
+
+        new MessagingAuthenticatorRequiredAction().processAction(ctx);
+
+        verify(form).setError("messaging-authenticator-setup-invalid-format");
+        verify(form).setAttribute("isTelegram", true);
+        verify(form).setAttribute("channelDisplayName", "Telegram");
+        verify(form).createForm("messaging-authenticator-setup-form.ftl");
     }
 
     @Test @DisplayName("cancel goes back to setup form when no code in flight")
