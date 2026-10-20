@@ -20,11 +20,15 @@
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcLabelWrapperClass!}">
                     <label for="contactAddress" class="${properties.kcLabelClass!}">
-                        <#if isTelegram??>${msg("messaging-authenticator-setup-telegram-label")}<#else>${msg("messaging-authenticator-setup-phone-label")}</#if>
+                        <#if isTelegram!false>${msg("messaging-authenticator-setup-telegram-label")}<#else>${msg("messaging-authenticator-setup-phone-label")}</#if>
                     </label>
                 </div>
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input id="contactAddress" name="contactAddress" type="text" class="${properties.kcInputClass!}" autofocus/>
+                    <#if isTelegram!false>
+                        <input id="contactAddress" name="contactAddress" type="text" inputmode="numeric" autocomplete="off" class="${properties.kcInputClass!}" autofocus/>
+                    <#else>
+                        <input id="contactAddress" name="contactAddress" type="tel" autocomplete="tel" class="${properties.kcInputClass!}" autofocus/>
+                    </#if>
                 </div>
             </div>
             <div class="${properties.kcFormGroupClass!}">

@@ -11,8 +11,9 @@ import org.keycloak.authentication.InitiatedActionSupport;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.common.util.SecretGenerator;
-import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.credential.CredentialModel;
+import org.keycloak.forms.login.LoginFormsProvider;
+import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.ModelDuplicateException;
 import org.keycloak.models.SubjectCredentialManager;
@@ -40,9 +41,7 @@ public class MessagingAuthenticatorRequiredAction implements RequiredActionProvi
     @Override
     public void requiredActionChallenge(RequiredActionContext context) {
         MessageChannel channel = channelFor(context);
-        context.form().setAttribute("channelDisplayName", channel.getDisplayName());
-        context.form().setAttribute("isTelegram", channel == MessageChannel.TELEGRAM);
-        context.challenge(context.form().createForm(SETUP_TEMPLATE));
+        context.challenge(setupForm(context, channel).createForm(SETUP_TEMPLATE));
     }
 
     @Override
@@ -58,7 +57,7 @@ public class MessagingAuthenticatorRequiredAction implements RequiredActionProvi
                 requiredActionChallenge(context);
                 return;
             }
-            context.challenge(context.form()
+            context.challenge(setupForm(context, channel)
                     .setError("messaging-authenticator-setup-cancelled")
                     .createForm(SETUP_TEMPLATE));
             return;
@@ -79,12 +78,12 @@ public class MessagingAuthenticatorRequiredAction implements RequiredActionProvi
         if (session.getAuthNote(MessagingConstants.CODE) == null) {
             String contact = form.getFirst("contactAddress");
             if (contact == null || contact.isBlank()) {
-                context.challenge(context.form().setError("messaging-authenticator-setup-missing-contact").createForm(SETUP_TEMPLATE));
+                context.challenge(setupForm(context, channel).setError("messaging-authenticator-setup-missing-contact").createForm(SETUP_TEMPLATE));
                 return;
             }
             contact = E164Validator.normalize(contact);
             if (!isValidForChannel(channel, contact)) {
-                context.challenge(context.form().setError("messaging-authenticator-setup-invalid-format").createForm(SETUP_TEMPLATE));
+                context.challenge(setupForm(context, channel).setError("messaging-authenticator-setup-invalid-format").createForm(SETUP_TEMPLATE));
                 return;
             }
             session.setAuthNote(MessagingConstants.SETUP_CONTACT_ADDRESS, contact);
@@ -104,7 +103,7 @@ public class MessagingAuthenticatorRequiredAction implements RequiredActionProvi
                     // Fallback, e.g. two setup requests racing each other.
                     logger.warnf("Messaging credential already exists for user %s: %s", user.getUsername(), e.getMessage());
                     resetCode(session);
-                    context.challenge(context.form()
+                    context.challenge(setupForm(context, channel)
                             .setError("messaging-authenticator-setup-already-configured")
                             .createForm(SETUP_TEMPLATE));
                     return;
@@ -180,7 +179,7 @@ public class MessagingAuthenticatorRequiredAction implements RequiredActionProvi
                 sender.send(OtpMessage.builder().to(contact).code(code).ttlSeconds(ttl).build());
             } catch (MessageDeliveryException | RuntimeException | LinkageError e) {
                 logger.errorf(e, "Setup OTP delivery failed for channel=%s", channel);
-                context.challenge(context.form().setError("messaging-authenticator-setup-send-error").createForm(SETUP_TEMPLATE));
+                context.challenge(setupForm(context, channel).setError("messaging-authenticator-setup-send-error").createForm(SETUP_TEMPLATE));
                 return;
             }
         }
@@ -230,6 +229,17 @@ public class MessagingAuthenticatorRequiredAction implements RequiredActionProvi
                     return cfg != null && cfg.getConfig() != null ? cfg.getConfig() : Map.<String, String>of();
                 })
                 .findFirst().orElse(Map.of());
+    }
+
+    /**
+     * The setup form, with the attributes the template needs to show the right
+     * label and input type. Every render of the setup form must go through here,
+     * because {@code context.form()} returns a new provider each time.
+     */
+    private LoginFormsProvider setupForm(RequiredActionContext context, MessageChannel channel) {
+        return context.form()
+                .setAttribute("channelDisplayName", channel.getDisplayName())
+                .setAttribute("isTelegram", channel == MessageChannel.TELEGRAM);
     }
 
     private void challengeVerify(RequiredActionContext context, String error, Object... params) {
