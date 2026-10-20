@@ -12,15 +12,17 @@ import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.common.util.SecretGenerator;
 import org.keycloak.models.AuthenticatorConfigModel;
+import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.RealmModel;
+import org.keycloak.models.ModelDuplicateException;
+import org.keycloak.models.SubjectCredentialManager;
 import org.keycloak.models.UserModel;
 import org.keycloak.sessions.AuthenticationSessionModel;
 
 import jakarta.ws.rs.core.MultivaluedMap;
-import jakarta.ws.rs.core.Response;
 
 import java.security.MessageDigest;
+import java.util.List;
 import java.util.Map;
 
 public class MessagingAuthenticatorRequiredAction implements RequiredActionProvider, CredentialRegistrator {
@@ -96,11 +98,19 @@ public class MessagingAuthenticatorRequiredAction implements RequiredActionProvi
         switch (validate(session, submitted)) {
             case VALID:
                 String contactAddr = session.getAuthNote(MessagingConstants.SETUP_CONTACT_ADDRESS);
+                try {
+                    saveCredential(user, channel.getDisplayName() + ": " + contactAddr);
+                } catch (ModelDuplicateException e) {
+                    // Fallback, e.g. two setup requests racing each other.
+                    logger.warnf("Messaging credential already exists for user %s: %s", user.getUsername(), e.getMessage());
+                    resetCode(session);
+                    context.challenge(context.form()
+                            .setError("messaging-authenticator-setup-already-configured")
+                            .createForm(SETUP_TEMPLATE));
+                    return;
+                }
                 String attr = ContactResolver.attributeNameFor(channel, findConfig(context));
                 user.setSingleAttribute(attr, contactAddr);
-                MessagingAuthenticatorCredentialModel cred = MessagingAuthenticatorCredentialModel.create();
-                cred.setUserLabel(channel.getDisplayName() + ": " + contactAddr);
-                user.credentialManager().createStoredCredential(cred);
                 resetCode(session);
                 user.removeRequiredAction(PROVIDER_ID);
                 context.success();
@@ -116,6 +126,32 @@ public class MessagingAuthenticatorRequiredAction implements RequiredActionProvi
                 challengeVerify(context, "messaging-authenticator-setup-code-invalid");
                 return;
         }
+    }
+
+    /**
+     * Keeps exactly one messaging credential per user. The contact attribute is
+     * single-valued, so setup updates the existing credential instead of adding one.
+     */
+    private void saveCredential(UserModel user, String label) {
+        SubjectCredentialManager cm = user.credentialManager();
+        List<CredentialModel> existing = cm
+                .getStoredCredentialsByTypeStream(MessagingAuthenticatorCredentialModel.TYPE_ID)
+                .toList();
+
+        if (existing.isEmpty()) {
+            MessagingAuthenticatorCredentialModel cred = MessagingAuthenticatorCredentialModel.create();
+            cred.setUserLabel(label);
+            cm.createStoredCredential(cred);
+            return;
+        }
+
+        // Remove extras first so the new label can't clash with one of them.
+        CredentialModel keep = existing.getFirst();
+        existing.stream().skip(1).forEach(c -> cm.removeStoredCredentialById(c.getId()));
+
+        keep.setUserLabel(label);
+        MessagingAuthenticatorCredentialModel.ensureMetadata(keep);
+        cm.updateStoredCredential(keep);
     }
 
     private boolean isValidForChannel(MessageChannel channel, String contact) {
