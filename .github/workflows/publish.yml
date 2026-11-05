@@ -1,7 +1,7 @@
 # Builds an existing release tag against one or more Keycloak versions and
 # publishes each jar as <version>-KC<keycloak-version> to Maven Central and
-# GitHub Packages, attaching the jars (main, sources, javadoc) to that tag's
-# GitHub Release.
+# GitHub Packages, attaching the jars (main, sources, javadoc), the pom and
+# their .asc signatures to that tag's GitHub Release.
 #
 # Runs in three ways:
 # - from release.yml, right after a new release is tagged;
@@ -279,11 +279,32 @@ jobs:
           fi
           exit "$mvn_exit"
 
+      # Upload only: the release already exists and is never edited, and
+      # attached files are never replaced. Files already attached by an earlier,
+      # partly failed run are skipped. The main jar goes last: the checks above
+      # treat it as "done", so it must only appear once the rest is attached.
       - name: Attach artifact to release
         if: steps.state.outputs.attached == 'false'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ env.TAG }}
-          files: dist/*.jar
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+
+          MAIN="dist/${ARTIFACT_ID}-v${MAVEN_VERSION}.jar"
+          if [ ! -f "$MAIN" ]; then
+            echo "::error::$MAIN was not found in dist/."
+            exit 1
+          fi
+
+          ASSETS=$(gh release view "$TAG" --json assets -q '.assets[].name')
+          for f in dist/*; do
+            [ "$f" = "$MAIN" ] && continue
+            if grep -qxF "$(basename "$f")" <<< "$ASSETS"; then
+              echo "$(basename "$f") is already attached — skipping."
+            else
+              gh release upload "$TAG" "$f"
+            fi
+          done
+          gh release upload "$TAG" "$MAIN"
